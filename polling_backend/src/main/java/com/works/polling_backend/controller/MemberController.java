@@ -25,6 +25,22 @@ public class MemberController {
 
         return new ResponseEntity(new MemberResponse(res.getId(), res.getUserName(), res.getPassWord()), HttpStatus.ACCEPTED);
     }
+
+    //회원가입 요청시 응답
+    @PostMapping("register")
+    public ResponseEntity register(@RequestBody MemberResponse member){
+        Member insertMember = new Member();
+        insertMember.setUserName(member.getUserName());
+        insertMember.setPassWord(member.getPassWord());
+        Long res = memberService.join(insertMember);
+
+        if(res == null){
+            return new ResponseEntity(-1, HttpStatus.BAD_REQUEST);
+        }
+        else{
+            return new ResponseEntity(res, HttpStatus.ACCEPTED);
+        }
+    }
 }
 
 @Value
