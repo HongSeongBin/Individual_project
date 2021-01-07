@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Survey {
 
     @Id @GeneratedValue
@@ -27,9 +26,8 @@ public class Survey {
     @OneToMany(mappedBy = "survey")
     private List<Vote> votes = new ArrayList<>();
 
-    //우선은 단방향으로 구성해보자
-//    @OneToMany(mappedBy = "survey")
-//    private List<Question> question;
+    @OneToMany(mappedBy = "survey")
+    private List<Question> question;
 
     //생성시간
     private LocalDateTime startDate;
@@ -46,10 +44,6 @@ public class Survey {
     public static Survey createSurvey(Member member, String title){
         Survey survey = new Survey();
         survey.setMember(member);
-
-//        for(Vote v : votes){
-//            survey.addVote(v);
-//        }
 
         survey.setStartDate(LocalDateTime.now());
         survey.setTitle(title);
