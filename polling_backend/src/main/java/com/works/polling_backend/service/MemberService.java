@@ -15,7 +15,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     //login
-    @Transactional
     public Member login(String userName, String password){
         Member res=null;
 
