@@ -41,6 +41,18 @@ public class SurveyController {
 
         return response;
     }
+
+    //내가 투표한 설문
+    @PostMapping("/myVoting")
+    public List<SurveyData> getVotePolling(@RequestBody MemberData member){
+        List<Survey> res = surveyService.findSurveyByVote(member.getId());
+        List<SurveyData> response = new ArrayList<>();
+
+        for(Survey s : res)
+            response.add(new SurveyData(s.getMember().getUserName(), s.getTitle(), s.getStartDate(), s.getId()));
+
+        return response;
+    }
 }
 
 @Value
