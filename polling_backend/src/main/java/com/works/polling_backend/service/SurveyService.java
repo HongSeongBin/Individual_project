@@ -19,4 +19,9 @@ public class SurveyService {
     public List<Survey> findSurveys(){
         return surveyRepository.findAll();
     }
+
+    //자신이 생성한 설문목록 조회
+    public List<Survey> findSurveyByMake(Long memberId){
+        return surveyRepository.findByMember(memberId);
+    }
 }
