@@ -31,4 +31,13 @@ public class MemberService {
         }
         return res;
     }
+
+    //Register
+    @Transactional
+    public Long join(Member member){
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+
 }
