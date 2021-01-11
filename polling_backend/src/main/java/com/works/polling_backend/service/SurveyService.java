@@ -75,4 +75,23 @@ public class SurveyService {
 
         return survey.getId();
     }
+
+    //설문타이틀 바탕 설문조회
+    public Survey findSurveyByTitle(String surveyName){
+        return surveyRepository.findOneByTitle(surveyName);
+    }
+
+    //투표한적이 있는 설문인지
+    public Vote checkVote(Long memberId,String surveyName){
+        Member member = memberRepository.findOne(memberId);
+        Survey survey = surveyRepository.findOneByTitle(surveyName);
+
+        try {
+            Vote voteInfo = voteRepository.checkVoting(member, survey);
+            return voteInfo;
+        }catch(Exception e){
+            return null;
+        }
+    }
+
 }

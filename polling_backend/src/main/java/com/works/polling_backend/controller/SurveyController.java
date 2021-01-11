@@ -1,11 +1,9 @@
 package com.works.polling_backend.controller;
 
 
-import com.works.polling_backend.domain.Member;
-import com.works.polling_backend.domain.Question;
-import com.works.polling_backend.domain.QuestionStatus;
-import com.works.polling_backend.domain.Survey;
+import com.works.polling_backend.domain.*;
 import com.works.polling_backend.domain.answer.ObjectiveAnswer;
+import com.works.polling_backend.domain.answer.SubjectiveAnswer;
 import com.works.polling_backend.service.MemberService;
 import com.works.polling_backend.service.SurveyService;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +96,71 @@ public class SurveyController {
 
         return new ResponseEntity(HttpStatus.ACCEPTED);
 
+    }
+
+
+    //설문 투표 정보 반환
+    @PostMapping("/voteSurvey")
+    public VoteResponse votePolling(@RequestBody VoteInfo voteInfo){
+
+        Survey survey = surveyService.findSurveyByTitle(voteInfo.getSurveyName()); //제목을 바탕으로 해당하는 설문 찾기
+        SurveyData surveyInfo = new SurveyData(survey.getMember().getUserName(),survey.getTitle(),survey.getStartDate(),survey.getId());
+        String checkVote;
+        Vote vote = surveyService.checkVote(voteInfo.getMemberId(),voteInfo.getSurveyName());
+
+        //설문 투표한적이 있는지 없는지
+        if(vote != null)
+            checkVote="yes";
+        else
+            checkVote="no";
+
+        //설문투표여부와 해당 설문 정보를 바탕으로 response data 생성
+        VoteResponse voteResponse = new VoteResponse(checkVote,surveyInfo);
+
+        //response data에 객관식,주관식답변에 대한 정보 추가
+        for(Question q : survey.getQuestion()){
+            if(q.getType() == QuestionStatus.OBJECTIVE){
+                ObjectiveInfo tempObj = new ObjectiveInfo(q.getId(),q.getQuestion());
+                int total_count=0;
+
+                for(ObjectiveAnswer objectiveAnswer : q.getObjAnswers())
+                    total_count += objectiveAnswer.getCount();
+
+                for(ObjectiveAnswer objectiveAnswer : q.getObjAnswers())
+                    tempObj.getAnswers().add(new AnswerInfo(objectiveAnswer.getId(), objectiveAnswer.getAnswer(),objectiveAnswer.getCount(),total_count));
+
+                voteResponse.getObjectives().add(tempObj);
+            }
+            else if(q.getType() == QuestionStatus.SUBJECTIVE){
+                SubjectiveInfo subjectiveInfo = new SubjectiveInfo(q.getId(),q.getQuestion());
+                for(SubjectiveAnswer answer : q.getSbjAnswers()){
+                    subjectiveInfo.getAnswer().add(answer.getAnswer());
+                }
+                voteResponse.getSubjectives().add(subjectiveInfo);
+            }
+        }
+
+        return voteResponse;
+    }
+}
+
+@Value
+class VoteInfo{
+    Long memberId;
+    Long surveyId;
+    String surveyName;
+}
+
+@Value
+class VoteResponse{
+    String isVote;
+    SurveyData surveyInfo;
+    List<ObjectiveInfo> objectives = new ArrayList<>();
+    List<SubjectiveInfo> subjectives = new ArrayList<>();
+
+    public VoteResponse(String isVote,SurveyData surveyInfo) {
+        this.isVote = isVote;
+        this.surveyInfo = surveyInfo;
     }
 }
 

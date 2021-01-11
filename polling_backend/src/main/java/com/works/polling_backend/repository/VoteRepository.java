@@ -27,4 +27,12 @@ public class VoteRepository {
                 .setParameter("member",member)
                 .getResultList();
     }
+
+    //특정 회원정보와 설문정보로 투표한 유무 반환
+    public Vote checkVoting(Member member,Survey survey){
+        return em.createQuery("select v from Vote v where v.member = :member and v.survey = :survey",Vote.class)
+                .setParameter("member",member)
+                .setParameter("survey",survey)
+                .getSingleResult();
+    }
 }

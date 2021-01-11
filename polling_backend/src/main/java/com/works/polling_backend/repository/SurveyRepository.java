@@ -25,6 +25,13 @@ public class SurveyRepository {
                 .getResultList();
     }
 
+    //설문조사 타이틀 바탕으로 조회
+    public Survey findOneByTitle(String title){
+        return em.createQuery("select s from Survey s where s.title=:title",Survey.class)
+                .setParameter("title",title)
+                .getSingleResult();
+    }
+
     //설문조사 하나 조회
     public Survey findOne(Long id){
         return em.find(Survey.class, id);
