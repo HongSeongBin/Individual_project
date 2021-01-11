@@ -44,7 +44,4 @@ class ObjectiveAnswerRepositoryTest {
 
     }
 
-    @Test
-    void findByQuestion() {
-    }
 }

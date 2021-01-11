@@ -1,12 +1,9 @@
 package com.works.polling_backend.service;
 
 
-import com.works.polling_backend.domain.Member;
-import com.works.polling_backend.domain.Survey;
-import com.works.polling_backend.domain.Vote;
-import com.works.polling_backend.repository.MemberRepository;
-import com.works.polling_backend.repository.SurveyRepository;
-import com.works.polling_backend.repository.VoteRepository;
+import com.works.polling_backend.domain.*;
+import com.works.polling_backend.domain.answer.ObjectiveAnswer;
+import com.works.polling_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +18,8 @@ public class SurveyService {
     private final SurveyRepository surveyRepository;
     private final MemberRepository memberRepository;
     private final VoteRepository voteRepository;
-
+    private final QuestionRepository questionRepository;
+    private final ObjectiveAnswerRepository objectiveAnswerRepository;
 
     //설문목록 전체 조회
     public List<Survey> findSurveys(){
@@ -44,5 +42,37 @@ public class SurveyService {
             results.add(v.getSurvey());
 
         return results;
+    }
+
+    //객관식 대답 저장
+    @Transactional
+    public void saveObjectiveAnswer(List<ObjectiveAnswer> answer, Long questionId){
+        Question question = questionRepository.findOne(questionId);
+
+        for(ObjectiveAnswer s : answer) {
+            s.setQuestion(question);
+
+            objectiveAnswerRepository.save(s);
+        }
+    }
+
+    //설문 생성
+    @Transactional
+    public Long makeSurvey(Long memberId, String title, List<Question> questionList){
+        Member member = memberRepository.findOne(memberId);
+        Survey survey = Survey.createSurvey(member,title);
+
+        surveyRepository.save(survey);
+
+        for(Question q : questionList){
+            q.setSurvey(survey);
+            questionRepository.save(q);
+
+            if(q.getType() == QuestionStatus.OBJECTIVE){
+                saveObjectiveAnswer(q.getObjAnswers(),q.getId());
+            }
+        }
+
+        return survey.getId();
     }
 }

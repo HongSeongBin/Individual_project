@@ -39,5 +39,10 @@ public class MemberService {
         return member.getId();
     }
 
+    //특정 member 조회
+    public Member findOne(Long memberId){
+        return memberRepository.findOne(memberId);
+    }
+
 
 }

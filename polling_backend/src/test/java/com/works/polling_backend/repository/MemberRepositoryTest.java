@@ -25,15 +25,8 @@ class MemberRepositoryTest {
     void save() {
         //given
         Member member = new Member();
-//        Survey survey1 = new Survey();
-//        Survey survey2 = new Survey();
 
         List<Survey> surveyList = new ArrayList<>();
-
-//        survey1.setStartDate("12/13");
-//        survey2.setStartDate("1/3");
-//        surveyList.add(survey1);
-//        surveyList.add(survey2);
 
         Vote vote = new Vote();
         List<Vote> voteList = new ArrayList<>();

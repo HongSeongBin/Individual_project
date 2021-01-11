@@ -22,4 +22,13 @@ public class ObjectiveAnswer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
+
+    // 설문조사 생성 메서드
+    public static ObjectiveAnswer createObjectiveAnswer(String answer){
+        ObjectiveAnswer objectiveAnswer = new ObjectiveAnswer();
+        objectiveAnswer.setAnswer(answer);
+        objectiveAnswer.setCount(0);
+
+        return objectiveAnswer;
+    }
 }

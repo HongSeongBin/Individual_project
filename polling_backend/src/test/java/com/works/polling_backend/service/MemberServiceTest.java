@@ -32,20 +32,4 @@ class MemberServiceTest {
         //then
         assertEquals(member,memberRepository.findOne(saveId));
     }
-
-    @Test
-    void login() {
-        //given
-        String userName = "sungbin";
-        String passWord = "1234567";
-
-        Member res = memberService.login(userName, passWord);
-
-        if (res == null) {
-            System.out.println("success!!");
-            return;
-        }
-        fail();
-
-    }
 }

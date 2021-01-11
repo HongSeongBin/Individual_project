@@ -37,7 +37,6 @@ class SubjectiveAnswerRepositoryTest {
         subjectiveAnswerRepository.save(subjectiveAnswer2);
 
 
-        //then
     }
 
 

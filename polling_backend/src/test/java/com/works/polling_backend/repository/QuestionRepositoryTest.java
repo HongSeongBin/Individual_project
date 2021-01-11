@@ -49,9 +49,7 @@ class QuestionRepositoryTest {
 
         //then
         assertEquals(question,questionRepository.findOne(question.getId()));
-       // SubjectiveAnswer res = questionRepository.findOne(question.getId()).getSbjAnswers().get(0);
-       // System.out.println(res.getAnswer());
-        // System.out.println(res.getQuestion().getQuestion());
+
     }
 
 

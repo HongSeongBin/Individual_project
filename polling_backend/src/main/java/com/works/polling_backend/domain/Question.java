@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question {
 
     @Id @GeneratedValue
@@ -45,25 +44,4 @@ public class Question {
         objectiveAnswer.setQuestion(this);
     }
 
-    // 질문 생성 메서드
-    public static Question createQuestion(String ask, QuestionStatus type, Survey survey){
-        Question question = new Question();
-        question.setQuestion(ask);
-        question.setType(type);
-        question.setSurvey(survey);
-
-//        if(type == QuestionStatus.SUBJECTIVE){
-//            for(SubjectiveAnswer o : subjectiveAnswer){
-//                question.addSbjAnswer(o);
-//            }
-//        }
-//        else if(type == QuestionStatus.OBJECTIVE){
-//            for(ObjectiveAnswer o : objectiveAnswer){
-//                question.addObjAnswer(o);
-//            }
-//        }
-
-
-        return question;
-    }
 }
