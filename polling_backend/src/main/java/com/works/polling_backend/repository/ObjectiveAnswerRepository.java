@@ -24,6 +24,14 @@ public class ObjectiveAnswerRepository {
         }
     }
 
+    //질문과 해답을 바탕으로 대답조회
+    public ObjectiveAnswer findByQNA(Question question,String answer){
+        return em.createQuery("select o from ObjectiveAnswer o where o.question = :question and o.answer=:answer",ObjectiveAnswer.class)
+                .setParameter("question",question)
+                .setParameter("answer",answer)
+                .getSingleResult();
+    }
+
     //특정 질문에 대한 대답들 반환
     public List<ObjectiveAnswer> findByQuestion(Question question){
         return em.createQuery("select o from ObjectiveAnswer o where o.question = :question ",ObjectiveAnswer.class)

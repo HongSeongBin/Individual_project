@@ -3,6 +3,7 @@ package com.works.polling_backend.service;
 
 import com.works.polling_backend.domain.*;
 import com.works.polling_backend.domain.answer.ObjectiveAnswer;
+import com.works.polling_backend.domain.answer.SubjectiveAnswer;
 import com.works.polling_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class SurveyService {
     private final VoteRepository voteRepository;
     private final QuestionRepository questionRepository;
     private final ObjectiveAnswerRepository objectiveAnswerRepository;
+    private final SubjectiveAnswerRepository subjectiveAnswerRepository;
 
     //설문목록 전체 조회
     public List<Survey> findSurveys(){
@@ -92,6 +94,40 @@ public class SurveyService {
         }catch(Exception e){
             return null;
         }
+    }
+
+    //투표정보 업데이트
+    @Transactional
+    public void updateVoteInfo(Long memberId, Long surveyId){
+        Member member = memberRepository.findOne(memberId);
+        Survey survey = surveyRepository.findOne(surveyId);
+
+        Vote vote = new Vote();
+        vote.setMember(member);
+        vote.setSurvey(survey);
+
+        voteRepository.save(vote);
+    }
+
+    //설문대답정보 반영
+    @Transactional
+    public Long saveAnswer(Long questionId,String answer){
+        Question question = questionRepository.findOne(questionId);
+        if(question.getType() == QuestionStatus.OBJECTIVE){
+            ObjectiveAnswer objectiveAnswer = objectiveAnswerRepository.findByQNA(question,answer);
+            objectiveAnswer.setCount(objectiveAnswer.getCount()+1);
+
+            objectiveAnswerRepository.save(objectiveAnswer);
+
+        } else if (question.getType() == QuestionStatus.SUBJECTIVE){
+            SubjectiveAnswer subjectiveAnswer = new SubjectiveAnswer();
+            subjectiveAnswer.setQuestion(question);
+            subjectiveAnswer.setAnswer(answer);
+
+            subjectiveAnswerRepository.save(subjectiveAnswer);
+        }
+
+        return question.getSurvey().getId();
     }
 
 }

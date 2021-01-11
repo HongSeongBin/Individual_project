@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -142,6 +143,25 @@ public class SurveyController {
 
         return voteResponse;
     }
+
+    //대답 반영하기
+    @PostMapping("/answerSurvey")
+    public ResponseEntity updateAnswer(@RequestBody UpdateData updateData){
+
+        updateData.getAnswers().forEach((questionId,answer)->{
+            surveyService.saveAnswer(questionId,answer);
+        });
+        surveyService.updateVoteInfo(updateData.getMemberId(),updateData.getSurveyId());
+
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+}
+
+@Value
+class UpdateData{
+    Map<Long,String> answers;
+    Long memberId;
+    Long surveyId;
 }
 
 @Value
