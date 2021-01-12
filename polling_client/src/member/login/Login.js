@@ -39,7 +39,7 @@ class Login extends Component{
   render(){
     return (
       <div className="main" id="login">
-        <div style={{border:'solid',color:'#A9D0F5',borderRadius:'2em',marginTop:10}}>
+        <div style={{border:'solid',color:'#A9D0F5',borderRadius:'2em',marginTop:100}}>
           <div style={{margin:50}}>
           <h1>Login</h1>
           <Form

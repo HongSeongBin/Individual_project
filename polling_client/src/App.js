@@ -3,7 +3,7 @@ import Login from './member/login/Login';
 import { Route, BrowserRouter} from "react-router-dom";
 import { Layout } from 'antd';
 import AppHeader from './common/AppHeader';
-
+import Register from './member/register/Register';
 
 
 class App extends Component {
@@ -36,6 +36,7 @@ class App extends Component {
           )
         }
           <Route path="/" exact={true} render={(props) => <Login setUserstate = {this.setUserstate} />}></Route>
+          <Route path="/register" render={(props) => <Register />}></Route>
         </BrowserRouter>
       </Layout>
     )
