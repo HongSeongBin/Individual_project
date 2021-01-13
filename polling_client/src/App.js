@@ -5,7 +5,6 @@ import { Layout } from "antd";
 import AppHeader from "./common/AppHeader";
 import Register from "./member/register/Register";
 
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +31,22 @@ class App extends Component {
             render={(props) => <Login setUserstate={this.setUserstate} />}
           ></Route>
           <Route path="/register" render={(props) => <Register />}></Route>
+          <Route
+            path="/mainpage/survey"
+            render={(props) => <SurveyList type="All" isLogin={isLogin} />}
+          ></Route>
+          <Route
+            path="/mainpage/myMaking"
+            render={(props) => (
+              <SurveyList type="Make" userInfo={userInfo} isLogin={isLogin} />
+            )}
+          ></Route>
+          <Route
+            path="/mainpage/myVoting"
+            render={(props) => (
+              <SurveyList type="Vote" userInfo={userInfo} isLogin={isLogin} />
+            )}
+          ></Route>
         </BrowserRouter>
       </Layout>
     );
