@@ -4,6 +4,8 @@ import { Route, BrowserRouter } from "react-router-dom";
 import { Layout } from "antd";
 import AppHeader from "./common/AppHeader";
 import Register from "./member/register/Register";
+import SurveyList from "./survey/SurveyList";
+import MakeSurvey from "./survey/make/MakeSurvey";
 
 class App extends Component {
   constructor(props) {
@@ -45,6 +47,12 @@ class App extends Component {
             path="/mainpage/myVoting"
             render={(props) => (
               <SurveyList type="Vote" userInfo={userInfo} isLogin={isLogin} />
+            )}
+          ></Route>
+          <Route
+            path="/mainpage/make"
+            render={(props) => (
+              <MakeSurvey userInfo={userInfo} isLogin={isLogin} />
             )}
           ></Route>
         </BrowserRouter>

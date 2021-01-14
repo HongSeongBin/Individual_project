@@ -17,6 +17,11 @@ class SurveyService {
   voteList(user) {
     return axios.post(`${USER_API_BASE_URL}/myVoting`, user);
   }
+
+  //설문 생성 요청
+  makeSurvey(makeInfo) {
+    return axios.post(USER_API_BASE_URL + "/makeSurvey", makeInfo);
+  }
 }
 
 export default new SurveyService();
