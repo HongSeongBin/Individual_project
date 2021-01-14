@@ -20,7 +20,7 @@ class SurveyService {
 
   //설문 생성 요청
   makeSurvey(makeInfo) {
-    return axios.post(USER_API_BASE_URL + "/makeSurvey", makeInfo);
+    return axios.post(`${USER_API_BASE_URL}/makeSurvey`, makeInfo);
   }
 }
 
