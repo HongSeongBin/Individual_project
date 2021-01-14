@@ -17,7 +17,7 @@ public class ObjectiveAnswerRepository {
     private final EntityManager em;
 
     public void save(ObjectiveAnswer objectiveAnswer){
-        if(objectiveAnswer.getId()==null) {
+        if(objectiveAnswer.getId() == null) {
             em.persist(objectiveAnswer);
         }else{
             em.merge(objectiveAnswer);

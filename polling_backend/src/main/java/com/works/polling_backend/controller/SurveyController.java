@@ -1,6 +1,5 @@
 package com.works.polling_backend.controller;
 
-
 import com.works.polling_backend.domain.*;
 import com.works.polling_backend.domain.answer.ObjectiveAnswer;
 import com.works.polling_backend.domain.answer.SubjectiveAnswer;
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +63,13 @@ public class SurveyController {
     //설문생성
     @PostMapping("/makeSurvey")
     public ResponseEntity makePolling(@RequestBody MakeInfo makeInfo){
-        Member madeBy = memberService.findOne(makeInfo.getUserId());
         String title = makeInfo.getTitle();
+
+        if(!surveyService.validateDuplicateSurvey(title)){
+            return new ResponseEntity(-1,HttpStatus.BAD_REQUEST);
+        }
+
+        Member madeBy = memberService.findOne(makeInfo.getUserId());
         List<Question> qes = new ArrayList<>();
 
         //객관식 설문정보 저장
@@ -94,19 +99,21 @@ public class SurveyController {
 
         surveyService.makeSurvey(madeBy.getId(),title,qes);
 
-        return new ResponseEntity(HttpStatus.ACCEPTED);
+        return new ResponseEntity(HttpStatus.OK);
 
     }
 
 
     //설문 투표 정보 반환
-    @PostMapping("/voteSurvey")
-    public VoteResponse votePolling(@RequestBody VoteInfo voteInfo){
+    @GetMapping("/voteSurvey")
+    public VoteResponse votePolling(HttpServletRequest request){
+        Long memberId = Long.valueOf(request.getParameter("memberId"));
+        String surveyName = request.getParameter("surveyName");
 
-        Survey survey = surveyService.findSurveyByTitle(voteInfo.getSurveyName()); //제목을 바탕으로 해당하는 설문 찾기
-        SurveyData surveyInfo = new SurveyData(survey.getMember().getUserName(),survey.getTitle(),survey.getStartDate(),survey.getId());
+        Survey survey = surveyService.findSurveyByTitle(surveyName); //제목을 바탕으로 해당하는 설문 찾기
+        SurveyData surveyInfo = new SurveyData(survey.getMember().getUserName(), survey.getTitle(), survey.getStartDate(), survey.getId());
         String checkVote;
-        Vote vote = surveyService.checkVote(voteInfo.getMemberId(),voteInfo.getSurveyName());
+        Vote vote = surveyService.checkVote(memberId, surveyName);
 
         //설문 투표한적이 있는지 없는지
         if(vote != null)

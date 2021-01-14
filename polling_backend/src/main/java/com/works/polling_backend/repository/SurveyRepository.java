@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,10 +27,10 @@ public class SurveyRepository {
     }
 
     //설문조사 타이틀 바탕으로 조회
-    public Survey findOneByTitle(String title){
-        return em.createQuery("select s from Survey s where s.title=:title",Survey.class)
+    public Optional<Survey> findOneByTitle(String title){
+        return Optional.of(em.createQuery("select s from Survey s where s.title=:title",Survey.class)
                 .setParameter("title",title)
-                .getSingleResult();
+                .getSingleResult());
     }
 
     //설문조사 하나 조회

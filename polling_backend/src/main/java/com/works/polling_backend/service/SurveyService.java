@@ -5,6 +5,7 @@ import com.works.polling_backend.domain.*;
 import com.works.polling_backend.domain.answer.ObjectiveAnswer;
 import com.works.polling_backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,13 +79,23 @@ public class SurveyService {
 
     //설문타이틀 바탕 설문조회
     public Survey findSurveyByTitle(String surveyName){
-        return surveyRepository.findOneByTitle(surveyName);
+        return surveyRepository.findOneByTitle(surveyName).get();
+    }
+
+    //설문생성시 타이틀 중복 조회 체크
+    public boolean validateDuplicateSurvey(String surveyName){
+        try {
+            surveyRepository.findOneByTitle(surveyName).isPresent();
+        }catch(EmptyResultDataAccessException e) {
+            return true;
+        }
+        return false;
     }
 
     //투표한적이 있는 설문인지
     public Vote checkVote(Long memberId,String surveyName){
         Member member = memberRepository.findOne(memberId);
-        Survey survey = surveyRepository.findOneByTitle(surveyName);
+        Survey survey = surveyRepository.findOneByTitle(surveyName).get();
 
         try {
             Vote voteInfo = voteRepository.checkVoting(member, survey);
