@@ -33,6 +33,14 @@ public class SurveyRepository {
                 .getSingleResult());
     }
 
+    //설문조사 타이틀,사용자 바탕으로 조회
+    public Optional<Survey> findOneByTitleMember(String title,Member member){
+        return Optional.of(em.createQuery("select s from Survey s where s.title=:title and s.member=:member",Survey.class)
+                .setParameter("title",title)
+                .setParameter("member",member)
+                .getSingleResult());
+    }
+
     //설문조사 하나 조회
     public Survey findOne(Long id){
         return em.find(Survey.class, id);

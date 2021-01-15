@@ -64,12 +64,12 @@ public class SurveyController {
     @PostMapping("/makeSurvey")
     public ResponseEntity makePolling(@RequestBody MakeInfo makeInfo){
         String title = makeInfo.getTitle();
+        Member madeBy = memberService.findOne(makeInfo.getUserId());
 
-        if(!surveyService.validateDuplicateSurvey(title)){
+        if(!surveyService.validateDuplicateSurvey(title, madeBy)){
             return new ResponseEntity(-1,HttpStatus.BAD_REQUEST);
         }
 
-        Member madeBy = memberService.findOne(makeInfo.getUserId());
         List<Question> qes = new ArrayList<>();
 
         //객관식 설문정보 저장
@@ -106,14 +106,13 @@ public class SurveyController {
 
     //설문 투표 정보 반환
     @GetMapping("/voteSurvey")
-    public VoteResponse votePolling(HttpServletRequest request){
-        Long memberId = Long.valueOf(request.getParameter("memberId"));
-        String surveyName = request.getParameter("surveyName");
+    public VoteResponse votePolling(@RequestParam("memberId") String memberId, @RequestParam("surveyId") String surveyId){
+        Member member = memberService.findOne(Long.valueOf(memberId));
+        Survey survey = surveyService.findOne(Long.valueOf(surveyId));
 
-        Survey survey = surveyService.findSurveyByTitle(surveyName); //제목을 바탕으로 해당하는 설문 찾기
         SurveyData surveyInfo = new SurveyData(survey.getMember().getUserName(), survey.getTitle(), survey.getStartDate(), survey.getId());
         String checkVote;
-        Vote vote = surveyService.checkVote(memberId, surveyName);
+        Vote vote = surveyService.checkVote(member.getId(), survey.getId());
 
         //설문 투표한적이 있는지 없는지
         if(vote != null)

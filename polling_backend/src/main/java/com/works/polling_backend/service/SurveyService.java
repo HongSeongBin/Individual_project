@@ -27,6 +27,11 @@ public class SurveyService {
         return surveyRepository.findAll();
     }
 
+    //특정 설문 조회
+    public Survey findOne(Long surveyId){
+        return surveyRepository.findOne(surveyId);
+    }
+
     //자신이 생성한 설문목록 조회
     public List<Survey> findSurveyByMake(Long memberId){
         return surveyRepository.findByMember(memberId);
@@ -83,9 +88,9 @@ public class SurveyService {
     }
 
     //설문생성시 타이틀 중복 조회 체크
-    public boolean validateDuplicateSurvey(String surveyName){
+    public boolean validateDuplicateSurvey(String surveyName,Member member){
         try {
-            surveyRepository.findOneByTitle(surveyName).isPresent();
+            surveyRepository.findOneByTitleMember(surveyName,member).isPresent();
         }catch(EmptyResultDataAccessException e) {
             return true;
         }
@@ -93,9 +98,9 @@ public class SurveyService {
     }
 
     //투표한적이 있는 설문인지
-    public Vote checkVote(Long memberId,String surveyName){
+    public Vote checkVote(Long memberId,Long surveyId){
         Member member = memberRepository.findOne(memberId);
-        Survey survey = surveyRepository.findOneByTitle(surveyName).get();
+        Survey survey = surveyRepository.findOne(surveyId);
 
         try {
             Vote voteInfo = voteRepository.checkVoting(member, survey);
