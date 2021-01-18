@@ -11,19 +11,11 @@ class SurveyList extends Component {
   constructor(props) {
     super(props);
 
-    if (!this.props.isLogin) {
-      this.props.history.push("/");
-      notification.error({
-        message: "Mini Polling",
-        description: "Please Login first!",
-      });
-    }
+    this.state = {
+      isLoading: true,
+      surveys: [],
+    };
   }
-
-  state = {
-    isLoading: true,
-    surveys: [],
-  };
 
   columns = [
     {
@@ -100,6 +92,14 @@ class SurveyList extends Component {
   };
 
   componentWillMount() {
+    if (!this.props.isLogin) {
+      this.props.history.push("/");
+      notification.error({
+        message: "Mini Polling",
+        description: "Please Login first!",
+      });
+    }
+
     if (this.props.type == "All") this.getSurveys();
     else if (this.props.type == "Make") this.getMakingSurveys();
     else if (this.props.type == "Vote") this.getVotingSurveys();

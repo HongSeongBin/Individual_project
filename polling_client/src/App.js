@@ -4,6 +4,7 @@ import { Route, BrowserRouter } from "react-router-dom";
 import { Layout } from "antd";
 import AppHeader from "./common/AppHeader";
 import Register from "./member/register/Register";
+import SurveyList from "./survey/SurveyList";
 
 class App extends Component {
   constructor(props) {
