@@ -5,7 +5,6 @@ import { Layout } from "antd";
 import AppHeader from "./common/AppHeader";
 import Register from "./member/register/Register";
 
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +30,7 @@ class App extends Component {
             exact={true}
             render={(props) => <Login setUserstate={this.setUserstate} />}
           ></Route>
-          <Route path="/register" render={(props) => <Register />}></Route>
+          <Route path="/register" render={(props) => <Register />} />
         </BrowserRouter>
       </Layout>
     );
