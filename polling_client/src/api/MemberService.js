@@ -7,6 +7,11 @@ class MemberService {
   login(user) {
     return axios.post(`${USER_API_BASE_URL}/login`, user);
   }
+  
+  //회원가입
+  register(user) {
+    return axios.post(`${USER_API_BASE_URL}/register`, user);
+  }
 }
 
 export default new MemberService();
