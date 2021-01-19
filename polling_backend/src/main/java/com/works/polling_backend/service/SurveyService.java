@@ -82,32 +82,21 @@ public class SurveyService {
         return survey.getId();
     }
 
-    //설문타이틀 바탕 설문조회
-    public Survey findSurveyByTitle(String surveyName){
-        return surveyRepository.findOneByTitle(surveyName).get();
-    }
-
     //설문생성시 타이틀 중복 조회 체크
     public boolean validateDuplicateSurvey(String surveyName,Member member){
-        try {
-            surveyRepository.findOneByTitleMember(surveyName,member).isPresent();
-        }catch(EmptyResultDataAccessException e) {
+        if(surveyRepository.findOneByTitleMember(surveyName,member) == null)
             return true;
-        }
         return false;
     }
 
     //투표한적이 있는 설문인지
-    public Vote checkVote(Long memberId,Long surveyId){
+    public boolean checkVote(Long memberId,Long surveyId){
         Member member = memberRepository.findOne(memberId);
         Survey survey = surveyRepository.findOne(surveyId);
 
-        try {
-            Vote voteInfo = voteRepository.checkVoting(member, survey);
-            return voteInfo;
-        }catch(Exception e){
-            return null;
-        }
+        if(voteRepository.checkVoting(member, survey) == null)
+            return false;
+        return true;
     }
 
 }

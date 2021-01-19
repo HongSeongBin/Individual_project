@@ -26,19 +26,16 @@ public class SurveyRepository {
                 .getResultList();
     }
 
-    //설문조사 타이틀 바탕으로 조회
-    public Optional<Survey> findOneByTitle(String title){
-        return Optional.of(em.createQuery("select s from Survey s where s.title=:title",Survey.class)
-                .setParameter("title",title)
-                .getSingleResult());
-    }
-
     //설문조사 타이틀,사용자 바탕으로 조회
-    public Optional<Survey> findOneByTitleMember(String title,Member member){
-        return Optional.of(em.createQuery("select s from Survey s where s.title=:title and s.member=:member",Survey.class)
+    public Survey findOneByTitleMember(String title,Member member){
+        return em.createQuery("select s from Survey s where s.title=:title and s.member=:member",Survey.class)
                 .setParameter("title",title)
                 .setParameter("member",member)
-                .getSingleResult());
+                .setMaxResults(1)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     //설문조사 하나 조회

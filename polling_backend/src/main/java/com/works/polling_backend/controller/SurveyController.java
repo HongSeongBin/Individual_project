@@ -112,10 +112,9 @@ public class SurveyController {
 
         SurveyData surveyInfo = new SurveyData(survey.getMember().getUserName(), survey.getTitle(), survey.getStartDate(), survey.getId());
         String checkVote;
-        Vote vote = surveyService.checkVote(member.getId(), survey.getId());
 
         //설문 투표한적이 있는지 없는지
-        if(vote != null)
+        if(surveyService.checkVote(member.getId(), survey.getId()))
             checkVote="yes";
         else
             checkVote="no";
