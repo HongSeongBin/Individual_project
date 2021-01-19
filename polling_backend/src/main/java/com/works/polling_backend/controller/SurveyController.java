@@ -115,9 +115,9 @@ public class SurveyController {
 
         //설문 투표한적이 있는지 없는지
         if(surveyService.checkVote(member.getId(), survey.getId()))
-            checkVote="yes";
+            checkVote = "yes";
         else
-            checkVote="no";
+            checkVote = "no";
 
         //설문투표여부와 해당 설문 정보를 바탕으로 response data 생성
         VoteResponse voteResponse = new VoteResponse(checkVote,surveyInfo);
