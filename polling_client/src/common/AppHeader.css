@@ -1,0 +1,24 @@
+.app-title {
+    float: left;
+  }
+  
+.app-title a {
+  text-decoration: none;
+  line-height: 64px;
+  font-size: 21px;
+  display: inline-block;
+}
+
+.app-header {
+  position: fixed;
+  width: 100%;
+  box-shadow: 0 2px 8px #f0f1f2;
+  z-index: 10;
+  padding: 0;
+}
+  
+.app-menu {
+  float: right;
+}
+  
+  
