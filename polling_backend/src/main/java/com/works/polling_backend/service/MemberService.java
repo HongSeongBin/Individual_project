@@ -16,7 +16,7 @@ public class MemberService {
 
     //login
     public Member login(String userName, String password){
-        Member res=null;
+        Member res = null;
 
         List<Member> findMembers = memberRepository.findByName(userName);
 

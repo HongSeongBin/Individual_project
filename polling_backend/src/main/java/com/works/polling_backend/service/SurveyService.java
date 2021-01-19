@@ -6,6 +6,7 @@ import com.works.polling_backend.domain.answer.ObjectiveAnswer;
 import com.works.polling_backend.domain.answer.SubjectiveAnswer;
 import com.works.polling_backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,11 @@ public class SurveyService {
     //설문목록 전체 조회
     public List<Survey> findSurveys(){
         return surveyRepository.findAll();
+    }
+
+    //특정 설문 조회
+    public Survey findOne(Long surveyId){
+        return surveyRepository.findOne(surveyId);
     }
 
     //자신이 생성한 설문목록 조회
@@ -78,22 +84,21 @@ public class SurveyService {
         return survey.getId();
     }
 
-    //설문타이틀 바탕 설문조회
-    public Survey findSurveyByTitle(String surveyName){
-        return surveyRepository.findOneByTitle(surveyName);
+    //설문생성시 타이틀 중복 조회 체크
+    public boolean validateDuplicateSurvey(String surveyName,Member member){
+        if(surveyRepository.findOneByTitleMember(surveyName,member) == null)
+            return true;
+        return false;
     }
 
     //투표한적이 있는 설문인지
-    public Vote checkVote(Long memberId,String surveyName){
+    public boolean checkVote(Long memberId,Long surveyId){
         Member member = memberRepository.findOne(memberId);
-        Survey survey = surveyRepository.findOneByTitle(surveyName);
+        Survey survey = surveyRepository.findOne(surveyId);
 
-        try {
-            Vote voteInfo = voteRepository.checkVoting(member, survey);
-            return voteInfo;
-        }catch(Exception e){
-            return null;
-        }
+        if(voteRepository.checkVoting(member, survey) == null)
+            return false;
+        return true;
     }
 
     //투표정보 업데이트

@@ -23,12 +23,12 @@ public class MemberController {
         if (res == null)
             return new ResponseEntity(-1, HttpStatus.ACCEPTED);
 
-        return new ResponseEntity(new MemberData(res.getId(), res.getUserName(), res.getPassWord()), HttpStatus.ACCEPTED);
+        return new ResponseEntity(new MemberData(res.getId(), res.getUserName(), res.getPassWord()), HttpStatus.OK);
     }
 
     //회원가입 요청시 응답
     @PostMapping("register")
-    public ResponseEntity register(@RequestBody MemberResponse member){
+    public ResponseEntity register(@RequestBody MemberData member){
         Member insertMember = new Member();
         insertMember.setUserName(member.getUserName());
         insertMember.setPassWord(member.getPassWord());
@@ -38,7 +38,7 @@ public class MemberController {
             return new ResponseEntity(-1, HttpStatus.BAD_REQUEST);
         }
         else{
-            return new ResponseEntity(res, HttpStatus.ACCEPTED);
+            return new ResponseEntity(res, HttpStatus.OK);
         }
     }
 }

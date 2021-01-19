@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,10 +30,14 @@ public class VoteRepository {
     }
 
     //특정 회원정보와 설문정보로 투표한 유무 반환
-    public Vote checkVoting(Member member,Survey survey){
+    public Vote checkVoting(Member member, Survey survey){
         return em.createQuery("select v from Vote v where v.member = :member and v.survey = :survey",Vote.class)
                 .setParameter("member",member)
                 .setParameter("survey",survey)
-                .getSingleResult();
+                .setMaxResults(1)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 }
