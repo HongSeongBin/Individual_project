@@ -73,29 +73,30 @@ public class SurveyController {
 
         List<Question> qes = new ArrayList<>();
 
-        //객관식 설문정보 저장
-        for(ObjectiveInfo objectiveInfo : makeInfo.getObjectives()){
+        //질문 저장
+        for(QuestionInfo questionInfo : makeInfo.getQuestions()){
             Question tempQes = new Question();
-            tempQes.setType(QuestionStatus.OBJECTIVE);
-            tempQes.setQuestion(objectiveInfo.getQuestion());
 
-            List<ObjectiveAnswer> objectiveAnswers = new ArrayList<>();
+            //대답리스트 존재x -> 주관식
+            if(questionInfo.getAnswers().size() == 0){
+                tempQes.setType(QuestionStatus.SUBJECTIVE);
+                tempQes.setQuestion(questionInfo.getQuestion());
 
-            for(AnswerInfo answer : objectiveInfo.getAnswers()){
-                objectiveAnswers.add(ObjectiveAnswer.createObjectiveAnswer(answer.getAnswer()));
+                qes.add(tempQes);
             }
+            else if(questionInfo.getAnswers().size() > 0){
+                tempQes.setType(QuestionStatus.OBJECTIVE);
+                tempQes.setQuestion(questionInfo.getQuestion());
 
-            tempQes.setObjAnswers(objectiveAnswers);
-            qes.add(tempQes);
-        }
+                List<ObjectiveAnswer> objectiveAnswers = new ArrayList<>();
 
-        //주관식 설문정보 저장
-        for(SubjectiveInfo subjectiveInfo : makeInfo.getSubjectives()){
-            Question tempQes = new Question();
-            tempQes.setType(QuestionStatus.SUBJECTIVE);
-            tempQes.setQuestion(subjectiveInfo.getQuestion());
+                for (AnswerInfo answer : questionInfo.getAnswers()) {
+                    objectiveAnswers.add(ObjectiveAnswer.createObjectiveAnswer(answer.getAnswer()));
+                }
 
-            qes.add(tempQes);
+                tempQes.setObjAnswers(objectiveAnswers);
+                qes.add(tempQes);
+            }
         }
 
         surveyService.makeSurvey(madeBy.getId(),title,qes);
@@ -126,7 +127,7 @@ public class SurveyController {
         //response data에 객관식,주관식답변에 대한 정보 추가
         for(Question q : survey.getQuestion()){
             if(q.getType() == QuestionStatus.OBJECTIVE){
-                ObjectiveInfo tempObj = new ObjectiveInfo(q.getId(),q.getQuestion());
+                QuestionInfo tempObj = new QuestionInfo(q.getId(),"objective",q.getQuestion());
                 int total_count=0;
 
                 for(ObjectiveAnswer objectiveAnswer : q.getObjAnswers())
@@ -135,14 +136,15 @@ public class SurveyController {
                 for(ObjectiveAnswer objectiveAnswer : q.getObjAnswers())
                     tempObj.getAnswers().add(new AnswerInfo(objectiveAnswer.getId(), objectiveAnswer.getAnswer(),objectiveAnswer.getCount(),total_count));
 
-                voteResponse.getObjectives().add(tempObj);
+
+                voteResponse.getQuestions().add(tempObj);
             }
             else if(q.getType() == QuestionStatus.SUBJECTIVE){
-                SubjectiveInfo subjectiveInfo = new SubjectiveInfo(q.getId(),q.getQuestion());
+                QuestionInfo tempSbj = new QuestionInfo(q.getId(),"subjective",q.getQuestion());
                 for(SubjectiveAnswer answer : q.getSbjAnswers()){
-                    subjectiveInfo.getAnswer().add(answer.getAnswer());
+                    tempSbj.getAnswers().add(new AnswerInfo(answer.getId(),answer.getAnswer(),0,0));
                 }
-                voteResponse.getSubjectives().add(subjectiveInfo);
+                voteResponse.getQuestions().add(tempSbj);
             }
         }
 
@@ -180,8 +182,7 @@ class VoteInfo{
 class VoteResponse{
     String isVote;
     SurveyData surveyInfo;
-    List<ObjectiveInfo> objectives = new ArrayList<>();
-    List<SubjectiveInfo> subjectives = new ArrayList<>();
+    List<QuestionInfo> questions = new ArrayList<>();
 
     public VoteResponse(String isVote,SurveyData surveyInfo) {
         this.isVote = isVote;
@@ -193,8 +194,7 @@ class VoteResponse{
 class MakeInfo{
     Long userId;
     String title;
-    List<ObjectiveInfo> objectives = new ArrayList<>();
-    List<SubjectiveInfo> subjectives = new ArrayList<>();
+    List<QuestionInfo> questions = new ArrayList<>();
 
     public MakeInfo(Long userId, String title) {
         this.userId = userId;
@@ -203,14 +203,16 @@ class MakeInfo{
 }
 
 @Value
-class ObjectiveInfo{
+class QuestionInfo{
     Long questionId;
     String question;
+    String qtype;
     int total_count=0;
     List<AnswerInfo> answers = new ArrayList<>();
 
-    public ObjectiveInfo(Long questionId, String question) {
+    public QuestionInfo(Long questionId, String qtype, String question) {
         this.questionId = questionId;
+        this.qtype = qtype;
         this.question = question;
     }
 
