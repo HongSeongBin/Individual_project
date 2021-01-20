@@ -22,10 +22,14 @@ public class MemberRepository {
     }
 
     //이름 기반 찾기
-    public List<Member> findByName(String userName){
+    public Member findByName(String userName){
         return em.createQuery("select m from Member m where m.userName = :name", Member.class)
                 .setParameter("name",userName)
-                .getResultList();
+                .setMaxResults(1)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
 }

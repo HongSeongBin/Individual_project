@@ -1,9 +1,9 @@
 package com.works.polling_backend.controller;
 
+import com.works.polling_backend.controller.data.MemberData;
 import com.works.polling_backend.domain.Member;
 import com.works.polling_backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +35,7 @@ public class MemberController {
         Long res = memberService.join(insertMember);
 
         if(res == null){
-            return new ResponseEntity(-1, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(-1, HttpStatus.ACCEPTED);
         }
         else{
             return new ResponseEntity(res, HttpStatus.OK);
@@ -43,15 +43,3 @@ public class MemberController {
     }
 }
 
-@Value
-class MemberData {
-    Long id;
-    String userName;
-    String passWord;
-
-    MemberData(Long id, String userName, String passWord) {
-        this.id = id;
-        this.userName = userName;
-        this.passWord = passWord;
-    }
-}

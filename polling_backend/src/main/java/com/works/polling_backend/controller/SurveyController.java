@@ -1,21 +1,18 @@
 package com.works.polling_backend.controller;
 
+import com.works.polling_backend.controller.data.*;
 import com.works.polling_backend.domain.*;
 import com.works.polling_backend.domain.answer.ObjectiveAnswer;
 import com.works.polling_backend.domain.answer.SubjectiveAnswer;
 import com.works.polling_backend.service.MemberService;
 import com.works.polling_backend.service.SurveyService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -164,98 +161,3 @@ public class SurveyController {
     }
 }
 
-@Value
-class UpdateData{
-    Map<Long,String> answers;
-    Long memberId;
-    Long surveyId;
-}
-
-@Value
-class VoteInfo{
-    Long memberId;
-    Long surveyId;
-    String surveyName;
-}
-
-@Value
-class VoteResponse{
-    String isVote;
-    SurveyData surveyInfo;
-    List<QuestionInfo> questions = new ArrayList<>();
-
-    public VoteResponse(String isVote,SurveyData surveyInfo) {
-        this.isVote = isVote;
-        this.surveyInfo = surveyInfo;
-    }
-}
-
-@Value
-class MakeInfo{
-    Long userId;
-    String title;
-    List<QuestionInfo> questions = new ArrayList<>();
-
-    public MakeInfo(Long userId, String title) {
-        this.userId = userId;
-        this.title = title;
-    }
-}
-
-@Value
-class QuestionInfo{
-    Long questionId;
-    String question;
-    String qtype;
-    int total_count=0;
-    List<AnswerInfo> answers = new ArrayList<>();
-
-    public QuestionInfo(Long questionId, String qtype, String question) {
-        this.questionId = questionId;
-        this.qtype = qtype;
-        this.question = question;
-    }
-
-}
-
-@Value
-class AnswerInfo{
-    Long answerId;
-    String answer;
-    int cnt;
-    int total;
-
-    public AnswerInfo(Long answerId, String answer, int cnt, int total) {
-        this.answerId = answerId;
-        this.answer = answer;
-        this.cnt = cnt;
-        this.total = total;
-    }
-}
-
-@Value
-class SubjectiveInfo{
-    Long questionId;
-    String question;
-    List<String> answer = new ArrayList<>();
-
-    public SubjectiveInfo(Long questionId, String question) {
-        this.questionId = questionId;
-        this.question = question;
-    }
-}
-
-@Value
-class SurveyData{
-    String madeBy;
-    String title;
-    LocalDateTime startDate;
-    Long id;
-
-    SurveyData(String madeBy, String title, LocalDateTime startDate,Long id){
-        this.madeBy = madeBy;
-        this.title = title;
-        this.startDate = startDate;
-        this.id = id;
-    }
-}
