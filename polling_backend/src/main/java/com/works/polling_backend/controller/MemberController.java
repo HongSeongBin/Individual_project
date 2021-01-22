@@ -35,7 +35,7 @@ public class MemberController {
         Long res = memberService.join(insertMember);
 
         if(res == null){
-            return new ResponseEntity(-1, HttpStatus.ACCEPTED);
+            return new ResponseEntity(HttpStatus.CONFLICT);
         }
         else{
             return new ResponseEntity(res, HttpStatus.OK);
